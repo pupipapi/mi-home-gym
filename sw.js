@@ -1,6 +1,6 @@
 // Mi Home Gym: guarda la app en el teléfono para que abra sin internet.
 // Al publicar cambios, sube el número de CACHE (v2, v3...) para que el iPhone los reciba.
-const CACHE = 'home-gym-v1';
+const CACHE = 'home-gym-v2';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

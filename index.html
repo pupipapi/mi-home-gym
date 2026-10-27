@@ -277,8 +277,18 @@ const DB={db:null,
   open(){return new Promise((res,rej)=>{const r=indexedDB.open('homegym',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(this.db=r.result);r.onerror=()=>rej(r.error)})},
   get(k){return new Promise((res,rej)=>{const q=this.db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})},
   set(k,v){return new Promise((res,rej)=>{const tx=this.db.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=()=>res();tx.onerror=tx.onabort=()=>rej(tx.error)})}};
+function fresh(){
+  return{v:1,sample:false,start:iso(today()),
+    exercises:[
+      {id:'e1',name:'Press de banca',group:'Pecho',note:'',photo:''},
+      {id:'e2',name:'Sentadilla',group:'Piernas',note:'',photo:''},
+      {id:'e3',name:'Remo con mancuerna',group:'Espalda',note:'',photo:''},
+      {id:'e4',name:'Press militar',group:'Hombros',note:'',photo:''}],
+    logs:[],
+    routine:{days:[{id:'r1',groups:['Pecho','Espalda']},{id:'r2',groups:['Piernas','Hombros']}],next:null}};
+}
 function normalize(){
-  if(!S||!Array.isArray(S.exercises)||!Array.isArray(S.logs))S=sample();
+  if(!S||!Array.isArray(S.exercises)||!Array.isArray(S.logs))S=fresh();
   if(!S.routine)S.routine=S.sample?{days:[{id:'r1',groups:['Pecho','Espalda']},{id:'r2',groups:['Piernas','Hombros']}],next:null}:{days:[],next:null};
 }
 function save(){
@@ -346,8 +356,8 @@ function vHome(){
   return banner()+
   '<div class="top"><div><h1>Hoy</h1><p class="sub">'+esc(fLong(iso(t)))+'</p></div><button class="icon-btn" data-act="settings" aria-label="Ajustes">'+ICON.gear+'</button></div>'+
   '<div class="card"><div class="stats">'+
-   '<div class="stat"><div class="k">Desde inicio</div><div class="v">'+since+'<small>días</small></div></div>'+
-   '<div class="stat hl"><div class="k">Entrenados</div><div class="v">'+trained+'<small>días</small></div></div>'+
+   '<div class="stat"><div class="k">Desde inicio</div><div class="v">'+since+'<small>'+(since===1?'día':'días')+'</small></div></div>'+
+   '<div class="stat hl"><div class="k">Entrenados</div><div class="v">'+trained+'<small>'+(trained===1?'día':'días')+'</small></div></div>'+
    '<div class="stat"><div class="k">Esta semana</div><div class="v">'+week+'<small>/ 7</small></div></div>'+
   '</div><div class="week">'+dots+'</div></div>'+
   '<div style="margin-top:16px"><button class="primary" data-act="log">'+'<span style="width:20px;height:20px;display:inline-grid">'+ICON.plus+'</span>Registrar entrenamiento</button></div>'+
